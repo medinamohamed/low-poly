@@ -4,8 +4,10 @@ const pixel = 25; // 1 pixel is equal to a distance of 30
 
 function setup() {
 
-    let l = 27
-    canva = createCanvas(pixel*l, pixel*l);
+    colorMode(HSB);
+
+    let l = 26
+    canva = createCanvas(pixel*28, pixel*25);
 
 
     // Plan cartesien
@@ -44,15 +46,20 @@ function setup() {
         }
 
     }
+    function newTriangle(A, B, C,dim,addhue,b) {
 
-    function drawTriangle(A, B, C) {
-      triangle(A.x, A.y, B.x, B.y, C.x, C.y);
-    }
-
-    function newTriangle(A, B, C) {
         currentPoints = [A, B, C];
-        drawTriangle.apply(this, currentPoints);
-    }
+
+        let h = 210;
+        let s = 55;
+        //let b = 100;
+
+        fill(h+(10*addhue),s-(16*dim),b);
+
+        noStroke();
+        triangle(A.x, A.y, B.x, B.y, C.x, C.y);
+
+}
 
     function initializeCoordinate(column) {
 
@@ -67,11 +74,11 @@ function setup() {
 
     let current;
 
-    function drawOneRow(row, initializeCoordinate) {
+    function drawOneRow(j, initializeCoordinate) {
         let previousCoordinate = []
     
         let A = initializeCoordinate[0]
-        let B = point(0, (row * n))
+        let B = point(0, (j * n))
         previousCoordinate.push(B)
         let len = initializeCoordinate.length / 2;
         for (let i = 1; i < len; i++) {
@@ -79,26 +86,41 @@ function setup() {
             current = (2 * i) - 1
             let C = initializeCoordinate[current]
 
-            newTriangle(A, B, C) // Triangle 1 
+            dim = ((i/len)/8);
+                newTriangle(A, B, C,(i*(dim)),j,92+(i*0.95)) // Triangle 1 
 
-            A = point(current * n, (row * n)+ran)
+            
+
+            let bool = Math.floor(Math.random()*2)
+            if (bool == 0){
+                A = point((current * n)- (ran/2), (j * n)+ran)
+
+            }
+            else if (bool == 1){
+                A = point((current * n)+(ran/2), (j * n)+ran)
+
+            }
         
             previousCoordinate.push(A)
-            newTriangle(A, B, C) // Triangle  2
+            newTriangle(A, B, C,(i*(2*dim)),j,95+(i*0.65)) // Triangle  2
 
             current = 2 * i
+            if (bool == 0){
+                B = point((current * n)+ (ran/2), j * n)
 
-            B = point(current * n, row * n)
+            }
+            else if (bool == 1){
+                B = point((current * n)-(ran/2), j * n)
+
+            }
             previousCoordinate.push(B)
-            newTriangle(A, B, C) // Triangle 3
+            newTriangle(A, B, C,(i*(3*dim)),j,97.5) // Triangle 3
 
 
             A = initializeCoordinate[current]
-            newTriangle(A, B, C); // Triangle 4
+            newTriangle(A, B, C,(i*(4*dim)),j,98); // Triangle 4
 
         }
-        console.log(previousCoordinate)
-        //todo before returning change randomnly the n to 3 , 4 or 5 except for last row
         return previousCoordinate;
 
     }
@@ -107,12 +129,12 @@ function setup() {
     function drawAllRows(numberOfRows, numberOfColumns) {
         numberOfRows++;
         let newCoordinate = drawOneRow(1, initializeCoordinate(numberOfColumns));
-        for (let i = 2; i < numberOfRows; i++) {
-          newCoordinate = drawOneRow(i, newCoordinate);
+        for (let j = 2; j < numberOfRows; j++) {
+          newCoordinate = drawOneRow(j, newCoordinate);
         }
 
     }
-    drawAllRows(12, 12);
+    drawAllRows(12, 15);
 
 
     function draw() {
