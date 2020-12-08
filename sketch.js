@@ -1,3 +1,5 @@
+// This sketch can be viewed at https://www.openprocessing.org/sketch/1037289
+
 let n = 2 // length of an triangle in pixel
 
 const pixel = 25; // 1 pixel is equal to a distance of 30
